@@ -37,7 +37,7 @@ class PercentageDiscountConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('percentage', 'percent', array(
+            ->add('percentage', 'integer', array(
                 'label' => 'sylius.form.action.percentage_discount_configuration.percentage',
                 'constraints' => array(
                     new NotBlank(),
