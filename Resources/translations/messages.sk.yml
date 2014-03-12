@@ -3,5 +3,7 @@
 
 sylius:
   form:
+    coupon:
+      code: Kód
     promotion:
-      name: Ime
+      name: Názov
