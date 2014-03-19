@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @author Saša Stamenković <umpirsky@gmail.com>
  */
-class SyliusPromotionsExtension extends AbstractResourceExtension
+class SyliusPromotionExtension extends AbstractResourceExtension
 {
     /**
      * {@inheritdoc}
