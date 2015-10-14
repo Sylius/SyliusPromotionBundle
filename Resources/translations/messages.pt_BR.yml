@@ -5,42 +5,42 @@ sylius:
   form:
     action:
       fixed_discount_configuration:
-        amount: Cantidad
+        amount: Quantidade
       percentage_discount_configuration:
-        percentage: Porcentaje
+        percentage: 'Porcentagem %'
       shipping_discount_configuration:
-        percentage: Porcentaje
+        percentage: 'Porcentagem %'
       type: Tipo
     rule:
       taxonomy_configuration:
-        taxons: Taxonomías
+        taxons: Taxas
         exclude: Excluir
       contains_product_configuration:
-        variants: Productos
+        variants: Produtos
         exclude: Excluir
       item_count_configuration:
-        count: Contador
-        equal: Igual
+        count: Contagem
+        equal: Igualdade
       item_total_configuration:
-        amount: Cantidad
-        equal: Igual
+        amount: Quantidade
+        equal: Igualdade
       nth_order_configuration:
-        nth: Enésimo
+        nth: N-ésimo
       shipping_country_configuration:
         country: País
       type: Tipo
     coupon:
       code: Código
-      usage_limit: Limite de uso
+      usage_limit: Limite de utilização
     coupon_generate_instruction:
-      amount: Cantidad
-      usage_limit: Límite de uso
+      amount: Quantidade
+      usage_limit: Limite de utilização
     promotion:
-      actions: Acciones
-      coupon_based: Basado en cupones
-      description: Descripción
-      ends_at: Termina el
-      name: Nombre
-      rules: Reglas
-      starts_at: Empieza el
-      usage_limit: Límite de uso
+      actions: Ações
+      coupon_based: Cupom com base
+      description: Descrição
+      ends_at: Termina em
+      name: Nome
+      rules: Regras
+      starts_at: Começa em
+      usage_limit: Limite de utilização

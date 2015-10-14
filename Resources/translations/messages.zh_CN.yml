@@ -5,4 +5,9 @@ sylius:
   form:
     rule:
       contains_product_configuration:
-        variants: Продукти
+        variants: 产品
+    coupon:
+      code: 代码
+    promotion:
+      description: 描述
+      name: 名称

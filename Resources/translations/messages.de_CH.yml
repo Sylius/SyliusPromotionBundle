@@ -3,6 +3,7 @@
 
 sylius:
   form:
-    rule:
-      contains_product_configuration:
-        variants: Продукти
+    coupon:
+      code: Code
+    promotion:
+      name: Name
