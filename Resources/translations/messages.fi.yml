@@ -3,11 +3,11 @@
 
 sylius:
     form:
-        promotion:
-            name: Tên
         promotion_action:
-            type: Phân loại
+            type: Tyyppi
         promotion_rule:
+            contains_product_configuration:
+                variants: Tuotteet
             shipping_country_configuration:
-                country: Quốc gia
-            type: Phân loại
+                country: Maa
+            type: Tyyppi

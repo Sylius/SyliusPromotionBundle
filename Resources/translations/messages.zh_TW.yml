@@ -3,11 +3,9 @@
 
 sylius:
     form:
-        promotion:
-            name: Tên
         promotion_action:
-            type: Phân loại
+            type: 類型
         promotion_rule:
             shipping_country_configuration:
-                country: Quốc gia
-            type: Phân loại
+                country: 國家
+            type: 類型
