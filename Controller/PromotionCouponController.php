@@ -37,7 +37,7 @@ class PromotionCouponController extends ResourceController
             throw new NotFoundHttpException('Promotion not found.');
         }
 
-        $form = $this->container->get('form.factory')->create(PromotionCouponGeneratorInstructionType::class);
+        $form = $this->container->get('form.factory')->create((string) $configuration->getFormType());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
