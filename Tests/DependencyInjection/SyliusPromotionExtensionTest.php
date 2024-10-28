@@ -14,11 +14,13 @@ declare(strict_types=1);
 namespace Sylius\Bundle\PromotionBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Sylius\Bundle\PromotionBundle\Attribute\AsCatalogPromotionVariantChecker;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionAction;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionCouponEligibilityChecker;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionEligibilityChecker;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionRuleChecker;
 use Sylius\Bundle\PromotionBundle\DependencyInjection\SyliusPromotionExtension;
+use Sylius\Bundle\PromotionBundle\Tests\Stub\CatalogPromotionVariantCheckerStub;
 use Sylius\Bundle\PromotionBundle\Tests\Stub\PromotionActionStub;
 use Sylius\Bundle\PromotionBundle\Tests\Stub\PromotionCouponEligibilityCheckerStub;
 use Sylius\Bundle\PromotionBundle\Tests\Stub\PromotionEligibilityCheckerStub;
@@ -28,6 +30,27 @@ use Symfony\Component\DependencyInjection\Definition;
 
 final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
 {
+    /** @test */
+    public function it_autoconfigures_catalog_promotion_variant_checker_with_attribute(): void
+    {
+        $this->container->setParameter('kernel.environment', 'prod');
+        $this->container->setDefinition(
+            'acme.catalog_promotion_variant_checker_with_attribute',
+            (new Definition())
+                ->setClass(CatalogPromotionVariantCheckerStub::class)
+                ->setAutoconfigured(true),
+        );
+
+        $this->load();
+        $this->compile();
+
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(
+            'acme.catalog_promotion_variant_checker_with_attribute',
+            AsCatalogPromotionVariantChecker::SERVICE_TAG,
+            ['type' => 'custom', 'priority' => 9],
+        );
+    }
+
     /** @test */
     public function it_autoconfigures_promotion_action_with_attribute(): void
     {
