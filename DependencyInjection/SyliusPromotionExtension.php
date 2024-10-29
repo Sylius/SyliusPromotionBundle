@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sylius\Bundle\PromotionBundle\DependencyInjection;
 
+use Sylius\Bundle\PromotionBundle\Attribute\AsCatalogPromotionVariantChecker;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionAction;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionCouponEligibilityChecker;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionEligibilityChecker;
@@ -49,6 +50,16 @@ final class SyliusPromotionExtension extends AbstractResourceExtension
 
     private function registerAutoconfiguration(ContainerBuilder $container): void
     {
+        $container->registerAttributeForAutoconfiguration(
+            AsCatalogPromotionVariantChecker::class,
+            static function (ChildDefinition $definition, AsCatalogPromotionVariantChecker $attribute): void {
+                $definition->addTag(AsCatalogPromotionVariantChecker::SERVICE_TAG, [
+                    'type' => $attribute->getType(),
+                    'priority' => $attribute->getPriority(),
+                ]);
+            },
+        );
+
         $container->registerAttributeForAutoconfiguration(
             AsPromotionAction::class,
             static function (ChildDefinition $definition, AsPromotionAction $attribute): void {
