@@ -66,7 +66,7 @@ final class SyliusPromotionExtension extends AbstractResourceExtension
                 $definition->addTag(AsPromotionAction::SERVICE_TAG, [
                     'type' => $attribute->getType(),
                     'label' => $attribute->getLabel(),
-                    'form-type' => $attribute->getFormType(),
+                    'form_type' => $attribute->getFormType(),
                     'priority' => $attribute->getPriority(),
                 ]);
             },
@@ -92,7 +92,7 @@ final class SyliusPromotionExtension extends AbstractResourceExtension
                 $definition->addTag(AsPromotionRuleChecker::SERVICE_TAG, [
                     'type' => $attribute->getType(),
                     'label' => $attribute->getLabel(),
-                    'form-type' => $attribute->getFormType(),
+                    'form_type' => $attribute->getFormType(),
                     'priority' => $attribute->getPriority(),
                 ]);
             },
