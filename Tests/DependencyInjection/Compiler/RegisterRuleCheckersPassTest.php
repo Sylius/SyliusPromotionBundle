@@ -21,9 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class RegisterRuleCheckersPassTest extends AbstractCompilerPassTestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_registers_collected_rule_checkers_in_the_registry(): void
     {
         $this->setDefinition('sylius.registry.promotion.rule_checker', new Definition());
@@ -49,9 +47,7 @@ final class RegisterRuleCheckersPassTest extends AbstractCompilerPassTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_creates_parameter_which_maps_rule_type_to_label(): void
     {
         $this->setDefinition('sylius.registry.promotion.rule_checker', new Definition());
@@ -71,9 +67,7 @@ final class RegisterRuleCheckersPassTest extends AbstractCompilerPassTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_registers_collected_rule_checkers_form_types_in_the_registry(): void
     {
         $this->setDefinition('sylius.registry.promotion.rule_checker', new Definition());

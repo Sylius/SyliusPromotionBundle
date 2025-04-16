@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Definition;
 
 final class SetCatalogPromotionScopeTypesPassTest extends AbstractCompilerPassTestCase
 {
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_sets_scope_types_parameter(): void
     {
         $this->setDefinition(
@@ -43,7 +43,7 @@ final class SetCatalogPromotionScopeTypesPassTest extends AbstractCompilerPassTe
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_throws_an_exception_if_there_is_no_type_attribute_defined(): void
     {
         $this->expectException(\InvalidArgumentException::class);

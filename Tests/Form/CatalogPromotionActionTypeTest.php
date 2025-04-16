@@ -26,9 +26,7 @@ use Symfony\Component\Form\Test\FormIntegrationTestCase;
 
 final class CatalogPromotionActionTypeTest extends FormIntegrationTestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_allows_to_submit_form_with_wrong_values_without_throwing_an_exception_with_data_collector_enabled(): void
     {
         $this->expectNotToPerformAssertions();

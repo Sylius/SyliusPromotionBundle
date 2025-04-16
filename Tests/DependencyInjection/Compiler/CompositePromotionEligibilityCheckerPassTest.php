@@ -21,9 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class CompositePromotionEligibilityCheckerPassTest extends AbstractCompilerPassTestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_collects_tagged_promotion_eligibility_checkers(): void
     {
         $this->setDefinition('sylius.checker.promotion_eligibility', new Definition());

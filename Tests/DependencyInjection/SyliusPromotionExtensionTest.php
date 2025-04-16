@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\Definition;
 
 final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
 {
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_autoconfigures_catalog_promotion_variant_checker_with_attribute(): void
     {
         $this->container->setParameter('kernel.environment', 'prod');
@@ -51,7 +51,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_autoconfigures_promotion_action_with_attribute(): void
     {
         $this->container->setDefinition(
@@ -76,7 +76,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_autoconfigures_promotion_coupon_eligibility_checker_with_attribute(): void
     {
         $this->container->setDefinition(
@@ -96,7 +96,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_autoconfigures_promotion_eligibility_checker_with_attribute(): void
     {
         $this->container->setDefinition(
@@ -116,7 +116,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_autoconfigures_promotion_rule_checker_with_attribute(): void
     {
         $this->container->setDefinition(
@@ -141,7 +141,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_promotion_action_validation_groups_parameter_value_properly(): void
     {
         $this->load([
@@ -159,7 +159,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_empty_promotion_action_validation_groups_parameter_value(): void
     {
         $this->load();
@@ -170,7 +170,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_promotion_rule_validation_groups_parameter_value_properly(): void
     {
         $this->load([
@@ -188,7 +188,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_empty_promotion_rule_validation_groups_parameter_value(): void
     {
         $this->load();
@@ -199,7 +199,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_catalog_promotion_action_validation_groups_parameter_value_properly(): void
     {
         $this->load([
@@ -217,7 +217,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_empty_catalog_promotion_action_validation_groups_parameter_value(): void
     {
         $this->load();
@@ -228,7 +228,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_catalog_promotion_scope_validation_groups_parameter_value_properly(): void
     {
         $this->load([
@@ -246,7 +246,7 @@ final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    /** @test */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_loads_empty_catalog_promotion_scope_validation_groups_parameter_value(): void
     {
         $this->load();
