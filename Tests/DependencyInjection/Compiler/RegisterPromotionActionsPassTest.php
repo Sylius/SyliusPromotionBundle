@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sylius\Bundle\PromotionBundle\Tests\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\Attributes\Test;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Sylius\Bundle\PromotionBundle\DependencyInjection\Compiler\RegisterPromotionActionsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class RegisterPromotionActionsPassTest extends AbstractCompilerPassTestCase
 {
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_registers_collected_promotion_actions_in_the_registry(): void
     {
         $this->setDefinition('sylius.registry.promotion_action', new Definition());
@@ -47,7 +48,7 @@ final class RegisterPromotionActionsPassTest extends AbstractCompilerPassTestCas
         );
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_creates_parameter_which_maps_promotion_action_type_to_label(): void
     {
         $this->setDefinition('sylius.registry.promotion_action', new Definition());
@@ -67,7 +68,7 @@ final class RegisterPromotionActionsPassTest extends AbstractCompilerPassTestCas
         );
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_registers_collected_promotion_actions_form_types_in_the_registry(): void
     {
         $this->setDefinition('sylius.registry.promotion_action', new Definition());

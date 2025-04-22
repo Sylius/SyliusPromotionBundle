@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sylius\Bundle\PromotionBundle\Tests\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\Attributes\Test;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Sylius\Bundle\PromotionBundle\DependencyInjection\Compiler\SetCatalogPromotionActionTypesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,7 +21,7 @@ use Symfony\Component\DependencyInjection\Definition;
 
 final class SetCatalogPromotionActionTypesPassTest extends AbstractCompilerPassTestCase
 {
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_sets_action_types_parameter(): void
     {
         $this->setDefinition(
@@ -43,7 +44,7 @@ final class SetCatalogPromotionActionTypesPassTest extends AbstractCompilerPassT
         );
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_throws_an_exception_if_there_is_no_type_attribute_defined(): void
     {
         $this->expectException(\InvalidArgumentException::class);

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sylius\Bundle\PromotionBundle\Tests\Console\Command;
 
+use PHPUnit\Framework\Attributes\Test;
 use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Sylius\Component\Promotion\Generator\PromotionCouponGeneratorInstruction;
@@ -52,7 +53,7 @@ final class GenerateCouponsCommandTest extends KernelTestCase
         $this->commandTester = new CommandTester($this->command);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_returns_an_error_if_there_is_no_promotion_for_code(): void
     {
         $this->promotionRepository
@@ -73,7 +74,7 @@ final class GenerateCouponsCommandTest extends KernelTestCase
         $this->assertStringContainsString('No promotion found with this code', $output);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_returns_an_error_if_the_promotion_does_not_allow_coupons(): void
     {
         $promotion = $this->createMock(PromotionInterface::class);
@@ -96,7 +97,7 @@ final class GenerateCouponsCommandTest extends KernelTestCase
         $this->assertStringContainsString('This promotion is not coupon based', $output);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_handles_generator_exceptions_gracefully(): void
     {
         $promotion = $this->createMock(PromotionInterface::class);
@@ -134,7 +135,7 @@ final class GenerateCouponsCommandTest extends KernelTestCase
         $this->assertStringContainsString('Could not generate', $output);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_generates_coupons_with_default_length(): void
     {
         $promotion = $this->createMock(PromotionInterface::class);
@@ -172,7 +173,7 @@ final class GenerateCouponsCommandTest extends KernelTestCase
         $this->assertStringContainsString('Coupons have been generated', $output);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_generates_coupons_with_customized_length(): void
     {
         $promotion = $this->createMock(PromotionInterface::class);

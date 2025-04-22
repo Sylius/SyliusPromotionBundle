@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sylius\Bundle\PromotionBundle\Tests\DependencyInjection\Compiler;
 
+use PHPUnit\Framework\Attributes\Test;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Sylius\Bundle\PromotionBundle\DependencyInjection\Compiler\CompositePromotionEligibilityCheckerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class CompositePromotionEligibilityCheckerPassTest extends AbstractCompilerPassTestCase
 {
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function it_collects_tagged_promotion_eligibility_checkers(): void
     {
         $this->setDefinition('sylius.checker.promotion_eligibility', new Definition());
