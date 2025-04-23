@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sylius\Bundle\PromotionBundle\Tests\DependencyInjection;
 
-use PHPUnit\Framework\Attributes\Test;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Sylius\Bundle\PromotionBundle\Attribute\AsCatalogPromotionVariantChecker;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionAction;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionCouponEligibilityChecker;

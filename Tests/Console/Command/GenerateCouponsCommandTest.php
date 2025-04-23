@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sylius\Bundle\PromotionBundle\Tests\Console\Command;
 
-use PHPUnit\Framework\Attributes\Test;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Sylius\Component\Promotion\Generator\PromotionCouponGeneratorInstruction;
 use Sylius\Component\Promotion\Generator\PromotionCouponGeneratorInterface;

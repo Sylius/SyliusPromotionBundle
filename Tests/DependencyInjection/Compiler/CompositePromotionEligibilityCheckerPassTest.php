@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sylius\Bundle\PromotionBundle\Tests\DependencyInjection\Compiler;
 
-use PHPUnit\Framework\Attributes\Test;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Sylius\Bundle\PromotionBundle\DependencyInjection\Compiler\CompositePromotionEligibilityCheckerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
