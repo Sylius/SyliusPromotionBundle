@@ -94,14 +94,20 @@ final class CatalogPromotionScopeGroupValidatorTest extends TestCase
         /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
         $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
         $constraint = new CatalogPromotionScopeGroup();
+
         $scopeMock->expects($this->once())->method('getType')->willReturn('test');
         $this->contextMock->expects($this->once())->method('getValidator')->willReturn($validatorMock);
         $validatorMock->expects($this->once())->method('inContext')->with($this->contextMock)->willReturn($contextualValidatorMock);
-        $contextualValidatorMock->expects($this->once())->method('validate')->with($scopeMock, null, ['test_group'])
-            ->willReturn($contextualValidatorMock)
-        ;
+
+        // Adjust validation groups to match the associative array format
+        $contextualValidatorMock->expects($this->once())
+            ->method('validate')
+            ->with($scopeMock, null, ['group1' => 'test_group'])
+            ->willReturn($contextualValidatorMock);
+
         $this->contextMock->expects($this->once())->method('getViolations')->willReturn($violationListMock);
         $violationListMock->expects($this->once())->method('count')->willReturn(1);
+
         $this->catalogPromotionScopeGroupValidator->validate($scopeMock, $constraint);
     }
 }

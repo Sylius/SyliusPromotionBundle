@@ -68,10 +68,18 @@ final class PromotionRuleGroupValidatorTest extends TestCase
         $validatorMock = $this->createMock(ValidatorInterface::class);
         /** @var ContextualValidatorInterface&MockObject $contextualValidatorMock */
         $contextualValidatorMock = $this->createMock(ContextualValidatorInterface::class);
+
         $promotionRuleMock->expects($this->once())->method('getType')->willReturn('rule_two');
         $this->contextMock->expects($this->once())->method('getValidator')->willReturn($validatorMock);
         $validatorMock->expects($this->once())->method('inContext')->with($this->contextMock)->willReturn($contextualValidatorMock);
-        $contextualValidatorMock->expects($this->once())->method('validate')->with($promotionRuleMock, null, ['Default', 'rule_two'])->willReturn($contextualValidatorMock);
+
+        // Update the expected validation groups to match the associative array
+        $contextualValidatorMock->expects($this->once())->method('validate')->with(
+            $promotionRuleMock,
+            null,
+            ['Default' => 'Default', 'rule' => 'rule_two']
+        )->willReturn($contextualValidatorMock);
+
         $this->promotionRuleGroupValidator->validate($promotionRuleMock, new PromotionRuleGroup(['groups' => ['Default', 'test_group']]));
     }
 

@@ -26,30 +26,43 @@ final class EnabledTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->enabled = new Enabled();
     }
 
     public function testImplementsCriteriaInterface(): void
     {
-        $this->assertInstanceOf(CriteriaInterface::class, $this->enabled);
+        self::assertInstanceOf(CriteriaInterface::class, $this->enabled);
     }
 
     public function testAddsFiltersToQueryBuilder(): void
     {
-        /** @var QueryBuilder&MockObject $queryBuilderMock */
-        $queryBuilderMock = $this->createMock(QueryBuilder::class);
-        $queryBuilderMock->expects($this->once())->method('getRootAliases')->willReturn(['catalog_promotion']);
-        $queryBuilderMock->expects($this->once())->method('andWhere')->with('catalog_promotion.enabled = :enabled')->willReturn($queryBuilderMock);
-        $queryBuilderMock->expects($this->once())->method('setParameter')->with('enabled', true)->willReturn($queryBuilderMock);
-        $this->assertSame($queryBuilderMock, $this->enabled->filterQueryBuilder($queryBuilderMock));
+        /** @var QueryBuilder&MockObject $queryBuilder */
+        $queryBuilder = $this->createMock(QueryBuilder::class);
+
+        $queryBuilder->expects(self::once())->method('getRootAliases')->willReturn(['catalog_promotion']);
+
+        $queryBuilder->expects(self::once())
+            ->method('andWhere')
+            ->with('catalog_promotion.enabled = :enabled')
+            ->willReturn($queryBuilder);
+
+        $queryBuilder->expects(self::once())
+            ->method('setParameter')
+            ->with('enabled', true)
+            ->willReturn($queryBuilder);
+
+        self::assertSame($queryBuilder, $this->enabled->filterQueryBuilder($queryBuilder));
     }
 
     public function testVerifiesCatalogPromotion(): void
     {
-        /** @var CatalogPromotionInterface&MockObject $catalogPromotionMock */
-        $catalogPromotionMock = $this->createMock(CatalogPromotionInterface::class);
-        $catalogPromotionMock->expects($this->once())->method('isEnabled')->willReturn(true, false);
-        $this->assertTrue($this->enabled->verify($catalogPromotionMock));
-        $this->assertFalse($this->enabled->verify($catalogPromotionMock));
+        /** @var CatalogPromotionInterface&MockObject $catalogPromotion */
+        $catalogPromotion = $this->createMock(CatalogPromotionInterface::class);
+
+        $catalogPromotion->method('isEnabled')->willReturnOnConsecutiveCalls(true, false);
+
+        self::assertTrue($this->enabled->verify($catalogPromotion));
+        self::assertFalse($this->enabled->verify($catalogPromotion));
     }
 }
