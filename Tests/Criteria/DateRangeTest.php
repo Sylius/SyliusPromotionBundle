@@ -25,7 +25,7 @@ use Symfony\Component\Clock\ClockInterface;
 final class DateRangeTest extends TestCase
 {
     /** @var ClockInterface&MockObject */
-    private MockObject $clock;
+    private ClockInterface $clock;
 
     private DateRange $dateRange;
 

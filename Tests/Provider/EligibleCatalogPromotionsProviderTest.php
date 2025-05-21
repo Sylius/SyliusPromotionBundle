@@ -24,13 +24,13 @@ use Sylius\Component\Promotion\Repository\CatalogPromotionRepositoryInterface;
 final class EligibleCatalogPromotionsProviderTest extends TestCase
 {
     /** @var CatalogPromotionRepositoryInterface&MockObject */
-    private MockObject $catalogPromotionRepository;
+    private CatalogPromotionRepositoryInterface $catalogPromotionRepository;
 
     /** @var CriteriaInterface&MockObject */
-    private MockObject $firstCriterion;
+    private CriteriaInterface $firstCriterion;
 
     /** @var CriteriaInterface&MockObject */
-    private MockObject $secondCriterion;
+    private CriteriaInterface $secondCriterion;
 
     private EligibleCatalogPromotionsProvider $eligibleCatalogPromotionsProvider;
 
@@ -40,12 +40,21 @@ final class EligibleCatalogPromotionsProviderTest extends TestCase
         $this->catalogPromotionRepository = $this->createMock(CatalogPromotionRepositoryInterface::class);
         $this->firstCriterion = $this->createMock(CriteriaInterface::class);
         $this->secondCriterion = $this->createMock(CriteriaInterface::class);
-        $this->eligibleCatalogPromotionsProvider = new EligibleCatalogPromotionsProvider($this->catalogPromotionRepository, [$this->firstCriterion, $this->secondCriterion]);
+        $this->eligibleCatalogPromotionsProvider = new EligibleCatalogPromotionsProvider(
+            $this->catalogPromotionRepository,
+            [
+                $this->firstCriterion,
+                $this->secondCriterion,
+            ],
+        );
     }
 
     public function testImplementsEligibleCatalogPromotionsProviderInterface(): void
     {
-        self::assertInstanceOf(EligibleCatalogPromotionsProviderInterface::class, $this->eligibleCatalogPromotionsProvider);
+        self::assertInstanceOf(
+            EligibleCatalogPromotionsProviderInterface::class,
+            $this->eligibleCatalogPromotionsProvider,
+        );
     }
 
     public function testProvidesCatalogPromotionsBasedOnCriteria(): void

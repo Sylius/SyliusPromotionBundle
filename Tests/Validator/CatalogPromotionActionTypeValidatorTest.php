@@ -27,9 +27,12 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 final class CatalogPromotionActionTypeValidatorTest extends TestCase
 {
     /** @var ExecutionContextInterface&MockObject */
-    private MockObject $contextMock;
+    private ExecutionContextInterface $context;
 
     private CatalogPromotionActionTypeValidator $catalogPromotionActionTypeValidator;
+
+    /** @var CatalogPromotionActionInterface&MockObject */
+    private CatalogPromotionActionInterface $action;
 
     private const ACTION_TYPES = [
         'test',
@@ -38,68 +41,83 @@ final class CatalogPromotionActionTypeValidatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->contextMock = $this->createMock(ExecutionContextInterface::class);
+        parent::setUp();
+        $this->context = $this->createMock(ExecutionContextInterface::class);
         $this->catalogPromotionActionTypeValidator = new CatalogPromotionActionTypeValidator(self::ACTION_TYPES);
-        $this->catalogPromotionActionTypeValidator->initialize($this->contextMock);
+        $this->catalogPromotionActionTypeValidator->initialize($this->context);
+        $this->action = $this->createMock(CatalogPromotionActionInterface::class);
     }
 
     public function testThrowsExceptionWhenConstraintIsNotCatalogPromotionActionType(): void
     {
-        /** @var Constraint&MockObject $constraintMock */
-        $constraintMock = $this->createMock(Constraint::class);
-        /** @var CatalogPromotionActionInterface&MockObject $actionMock */
-        $actionMock = $this->createMock(CatalogPromotionActionInterface::class);
-        $this->expectException(UnexpectedTypeException::class);
-        $this->catalogPromotionActionTypeValidator->validate($actionMock, $constraintMock);
+        /** @var Constraint&MockObject $constraint */
+        $constraint = $this->createMock(Constraint::class);
+
+        self::expectException(UnexpectedTypeException::class);
+
+        $this->catalogPromotionActionTypeValidator->validate($this->action, $constraint);
     }
 
     public function testThrowsExceptionWhenValueIsNotCatalogPromotionAction(): void
     {
-        $this->expectException(UnexpectedTypeException::class);
+        self::expectException(UnexpectedTypeException::class);
+
         $this->catalogPromotionActionTypeValidator->validate(new stdClass(), new CatalogPromotionActionType());
     }
 
     public function testDoesNothingWhenPassedActionHasNullAsType(): void
     {
-        /** @var CatalogPromotionActionInterface&MockObject $actionMock */
-        $actionMock = $this->createMock(CatalogPromotionActionInterface::class);
-        $actionMock->expects($this->once())->method('getType')->willReturn(null);
-        $this->contextMock->expects($this->never())->method('buildViolation');
-        $this->catalogPromotionActionTypeValidator->validate($actionMock, new CatalogPromotionActionType());
+        $this->action->expects(self::once())->method('getType')->willReturn(null);
+
+        $this->context->expects(self::never())->method('buildViolation');
+
+        $this->catalogPromotionActionTypeValidator->validate($this->action, new CatalogPromotionActionType());
     }
 
     public function testDoesNothingWhenPassedActionHasAnEmptyStringAsType(): void
     {
-        /** @var CatalogPromotionActionInterface&MockObject $actionMock */
-        $actionMock = $this->createMock(CatalogPromotionActionInterface::class);
-        $actionMock->expects($this->once())->method('getType')->willReturn('');
-        $this->contextMock->expects($this->never())->method('buildViolation');
-        $this->catalogPromotionActionTypeValidator->validate($actionMock, new CatalogPromotionActionType());
+        $this->action->expects(self::once())->method('getType')->willReturn('');
+
+        $this->context->expects(self::never())->method('buildViolation');
+
+        $this->catalogPromotionActionTypeValidator->validate($this->action, new CatalogPromotionActionType());
     }
 
     public function testDoesNothingWhenCatalogPromotionActionHasValidType(): void
     {
-        /** @var CatalogPromotionActionInterface&MockObject $actionMock */
-        $actionMock = $this->createMock(CatalogPromotionActionInterface::class);
-        $actionMock->expects($this->once())->method('getType')->willReturn('test');
-        $this->contextMock->expects($this->never())->method('buildViolation');
-        $this->catalogPromotionActionTypeValidator->validate($actionMock, new CatalogPromotionActionType());
+        $this->action->expects(self::once())->method('getType')->willReturn('test');
+
+        $this->context->expects(self::never())->method('buildViolation');
+
+        $this->catalogPromotionActionTypeValidator->validate($this->action, new CatalogPromotionActionType());
     }
 
     public function testAddsViolationWhenTypeIsUnknown(): void
     {
-        /** @var ConstraintViolationBuilderInterface&MockObject $violationBuilderMock */
-        $violationBuilderMock = $this->createMock(ConstraintViolationBuilderInterface::class);
-        /** @var CatalogPromotionActionInterface&MockObject $actionMock */
-        $actionMock = $this->createMock(CatalogPromotionActionInterface::class);
+        /** @var ConstraintViolationBuilderInterface&MockObject $violationBuilder */
+        $violationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
+
         $constraint = new CatalogPromotionActionType();
-        $actionMock->expects($this->once())->method('getType')->willReturn('not_existing_type');
-        $this->contextMock->expects($this->once())->method('buildViolation')->with($constraint->invalidType)->willReturn($violationBuilderMock);
-        $violationBuilderMock->expects($this->once())->method('setParameter')->with('{{ available_action_types }}', implode(', ', self::ACTION_TYPES))
-            ->willReturn($violationBuilderMock)
-        ;
-        $violationBuilderMock->expects($this->once())->method('atPath')->with('type')->willReturn($violationBuilderMock);
-        $violationBuilderMock->expects($this->once())->method('addViolation');
-        $this->catalogPromotionActionTypeValidator->validate($actionMock, $constraint);
+
+        $this->action->expects(self::once())->method('getType')->willReturn('not_existing_type');
+
+        $this->context->expects(self::once())
+            ->method('buildViolation')
+            ->with($constraint->invalidType)
+            ->willReturn($violationBuilder);
+
+        $violationBuilder->expects(self::once())
+            ->method('setParameter')
+            ->with('{{ available_action_types }}', implode(', ', self::ACTION_TYPES))
+            ->willReturn($violationBuilder);
+
+        $violationBuilder->expects(self::once())
+            ->method('atPath')
+            ->with('type')
+            ->willReturn($violationBuilder);
+
+        $violationBuilder->expects(self::once())->method('addViolation');
+
+        $this->catalogPromotionActionTypeValidator->validate($this->action, $constraint);
     }
 }

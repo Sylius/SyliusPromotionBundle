@@ -28,9 +28,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class CatalogPromotionScopeGroupValidatorTest extends TestCase
 {
     /** @var ExecutionContextInterface&MockObject */
-    private MockObject $contextMock;
+    private ExecutionContextInterface $context;
 
     private CatalogPromotionScopeGroupValidator $catalogPromotionScopeGroupValidator;
+
+    /** @var CatalogPromotionScopeInterface&MockObject */
+    private CatalogPromotionScopeInterface $scope;
 
     private const VALIDATION_GROUPS = [
         'test' => [
@@ -43,53 +46,52 @@ final class CatalogPromotionScopeGroupValidatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->contextMock = $this->createMock(ExecutionContextInterface::class);
+        $this->context = $this->createMock(ExecutionContextInterface::class);
         $this->catalogPromotionScopeGroupValidator = new CatalogPromotionScopeGroupValidator(self::VALIDATION_GROUPS);
-        $this->catalogPromotionScopeGroupValidator->initialize($this->contextMock);
+        $this->catalogPromotionScopeGroupValidator->initialize($this->context);
+        $this->scope = $this->createMock(CatalogPromotionScopeInterface::class);
     }
 
     public function testThrowsExceptionWhenConstraintIsNotCatalogPromotionScopeGroup(): void
     {
-        /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
-        $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
-        /** @var Constraint&MockObject $constraintMock */
-        $constraintMock = $this->createMock(Constraint::class);
-        $this->expectException(UnexpectedTypeException::class);
-        $this->catalogPromotionScopeGroupValidator->validate($scopeMock, $constraintMock);
+        /** @var Constraint&MockObject $constraint */
+        $constraint = $this->createMock(Constraint::class);
+
+        self::expectException(UnexpectedTypeException::class);
+
+        $this->catalogPromotionScopeGroupValidator->validate($this->scope, $constraint);
     }
 
     public function testThrowsExceptionWhenValueIsNotCatalogPromotionScope(): void
     {
-        $this->expectException(UnexpectedTypeException::class);
+        self::expectException(UnexpectedTypeException::class);
+
         $this->catalogPromotionScopeGroupValidator->validate(new stdClass(), new CatalogPromotionScopeGroup());
     }
 
     public function testDoesNothingWhenTypeIsNull(): void
     {
-        /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
-        $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
-        $scopeMock->expects($this->once())->method('getType')->willReturn(null);
-        $this->contextMock->expects($this->never())->method('getValidator');
-        $this->catalogPromotionScopeGroupValidator->validate($scopeMock, new CatalogPromotionScopeGroup());
+        $this->scope->expects(self::once())->method('getType')->willReturn(null);
+
+        $this->context->expects(self::never())->method('getValidator');
+
+        $this->catalogPromotionScopeGroupValidator->validate($this->scope, new CatalogPromotionScopeGroup());
     }
 
     public function testDoesNothingWhenTypeIsAnEmptyString(): void
     {
-        /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
-        $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
-        $scopeMock->expects($this->once())->method('getType')->willReturn('');
-        $this->contextMock->expects($this->never())->method('getValidator');
-        $this->catalogPromotionScopeGroupValidator->validate($scopeMock, new CatalogPromotionScopeGroup());
+        $this->scope->expects(self::once())->method('getType')->willReturn('');
+
+        $this->context->expects(self::never())->method('getValidator');
+
+        $this->catalogPromotionScopeGroupValidator->validate($this->scope, new CatalogPromotionScopeGroup());
     }
 
     public function testPassesConfiguredValidationGroupsForFurtherValidation(): void
     {
         $constraint = new CatalogPromotionScopeGroup();
 
-        /** @var CatalogPromotionScopeInterface&MockObject $scope */
-        $scope = $this->createMock(CatalogPromotionScopeInterface::class);
-
-        $scope->method('getType')->willReturn('test');
+        $this->scope->method('getType')->willReturn('test');
 
         /** @var ValidatorInterface&MockObject $validator */
         $validator = $this->createMock(ValidatorInterface::class);
@@ -97,20 +99,20 @@ final class CatalogPromotionScopeGroupValidatorTest extends TestCase
         /** @var ContextualValidatorInterface&MockObject $contextualValidator */
         $contextualValidator = $this->createMock(ContextualValidatorInterface::class);
 
-        $this->contextMock->expects($this->once())
+        $this->context->expects(self::once())
             ->method('getValidator')
             ->willReturn($validator);
 
-        $validator->expects($this->once())
+        $validator->expects(self::once())
             ->method('inContext')
-            ->with($this->contextMock)
+            ->with($this->context)
             ->willReturn($contextualValidator);
 
-        $contextualValidator->expects($this->once())
+        $contextualValidator->expects(self::once())
             ->method('validate')
-            ->with($scope, null, ['group1' => 'test_group'])
+            ->with($this->scope, null, ['group1' => 'test_group'])
             ->willReturn($contextualValidator);
 
-        $this->catalogPromotionScopeGroupValidator->validate($scope, $constraint);
+        $this->catalogPromotionScopeGroupValidator->validate($this->scope, $constraint);
     }
 }

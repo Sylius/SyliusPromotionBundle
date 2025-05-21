@@ -24,44 +24,66 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 final class CouponGenerationAmountValidatorTest extends TestCase
 {
     /** @var GenerationPolicyInterface&MockObject */
-    private MockObject $generationPolicyMock;
+    private GenerationPolicyInterface $generationPolicy;
 
     /** @var ExecutionContextInterface&MockObject */
-    private MockObject $contextMock;
+    private ExecutionContextInterface $context;
 
     private CouponGenerationAmountValidator $couponGenerationAmountValidator;
 
+    /** @var ReadablePromotionCouponGeneratorInstructionInterface&MockObject */
+    private ReadablePromotionCouponGeneratorInstructionInterface $instruction;
+
+    private CouponPossibleGenerationAmount $constraint;
+
     protected function setUp(): void
     {
-        $this->generationPolicyMock = $this->createMock(GenerationPolicyInterface::class);
-        $this->contextMock = $this->createMock(ExecutionContextInterface::class);
-        $this->couponGenerationAmountValidator = new CouponGenerationAmountValidator($this->generationPolicyMock);
-        $this->couponGenerationAmountValidator->initialize($this->contextMock);
+        parent::setUp();
+        $this->generationPolicy = $this->createMock(GenerationPolicyInterface::class);
+        $this->context = $this->createMock(ExecutionContextInterface::class);
+        $this->couponGenerationAmountValidator = new CouponGenerationAmountValidator($this->generationPolicy);
+        $this->couponGenerationAmountValidator->initialize($this->context);
+        $this->instruction = $this->createMock(ReadablePromotionCouponGeneratorInstructionInterface::class);
+        $this->constraint = new CouponPossibleGenerationAmount();
     }
 
     public function testAddsViolation(): void
     {
-        /** @var ReadablePromotionCouponGeneratorInstructionInterface&MockObject $instructionMock */
-        $instructionMock = $this->createMock(ReadablePromotionCouponGeneratorInstructionInterface::class);
-        $constraint = new CouponPossibleGenerationAmount();
-        $instructionMock->expects($this->atLeastOnce())->method('getAmount')->willReturn(17);
-        $instructionMock->expects($this->atLeastOnce())->method('getCodeLength')->willReturn(1);
-        $this->generationPolicyMock->expects($this->once())->method('isGenerationPossible')->with($instructionMock)->willReturn(false);
-        $this->generationPolicyMock->expects($this->once())->method('getPossibleGenerationAmount')->with($instructionMock);
-        $this->contextMock->expects($this->once())->method('addViolation');
-        $this->couponGenerationAmountValidator->validate($instructionMock, $constraint);
+        $this->instruction->expects(self::atLeastOnce())->method('getAmount')->willReturn(17);
+
+        $this->instruction->expects(self::atLeastOnce())->method('getCodeLength')->willReturn(1);
+
+        $this->generationPolicy->expects(self::once())
+            ->method('isGenerationPossible')
+            ->with($this->instruction)
+            ->willReturn(false);
+
+        $this->generationPolicy->expects(self::once())
+            ->method('getPossibleGenerationAmount')
+            ->with($this->instruction);
+
+        $this->context->expects(self::once())->method('addViolation');
+
+        $this->couponGenerationAmountValidator->validate($this->instruction, $this->constraint);
     }
 
     public function testDoesNotAddViolation(): void
     {
-        /** @var ReadablePromotionCouponGeneratorInstructionInterface&MockObject $instructionMock */
-        $instructionMock = $this->createMock(ReadablePromotionCouponGeneratorInstructionInterface::class);
-        $constraint = new CouponPossibleGenerationAmount();
-        $instructionMock->expects($this->once())->method('getAmount')->willReturn(5);
-        $instructionMock->expects($this->once())->method('getCodeLength')->willReturn(1);
-        $this->generationPolicyMock->expects($this->once())->method('isGenerationPossible')->with($instructionMock)->willReturn(true);
-        $this->generationPolicyMock->expects($this->never())->method('getPossibleGenerationAmount')->with($instructionMock);
-        $this->contextMock->expects($this->never())->method('addViolation');
-        $this->couponGenerationAmountValidator->validate($instructionMock, $constraint);
+        $this->instruction->expects(self::once())->method('getAmount')->willReturn(5);
+
+        $this->instruction->expects(self::once())->method('getCodeLength')->willReturn(1);
+
+        $this->generationPolicy->expects(self::once())
+            ->method('isGenerationPossible')
+            ->with($this->instruction)
+            ->willReturn(true);
+
+        $this->generationPolicy->expects(self::never())
+            ->method('getPossibleGenerationAmount')
+            ->with($this->instruction);
+
+        $this->context->expects(self::never())->method('addViolation');
+
+        $this->couponGenerationAmountValidator->validate($this->instruction, $this->constraint);
     }
 }
