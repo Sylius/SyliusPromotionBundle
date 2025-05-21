@@ -13,22 +13,22 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Criteria;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
-use Sylius\Bundle\PromotionBundle\Criteria\DateRange;
 use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\PromotionBundle\Criteria\CriteriaInterface;
+use Sylius\Bundle\PromotionBundle\Criteria\DateRange;
 use Sylius\Component\Promotion\Model\CatalogPromotionInterface;
 use Symfony\Component\Clock\ClockInterface;
 
 final class DateRangeTest extends TestCase
 {
-    /**
-     * @var ClockInterface|MockObject
-     */
+    /** @var ClockInterface&MockObject */
     private MockObject $clockMock;
+
     private DateRange $dateRange;
+
     protected function setUp(): void
     {
         $this->clockMock = $this->createMock(ClockInterface::class);
@@ -42,7 +42,7 @@ final class DateRangeTest extends TestCase
 
     public function testAddsFiltersToQueryBuilder(): void
     {
-        /** @var QueryBuilder|MockObject $queryBuilderMock */
+        /** @var QueryBuilder&MockObject $queryBuilderMock */
         $queryBuilderMock = $this->createMock(QueryBuilder::class);
         $queryBuilderMock->expects($this->once())->method('getRootAliases')->willReturn(['o']);
         $now = new DateTimeImmutable();
@@ -54,7 +54,7 @@ final class DateRangeTest extends TestCase
 
     public function testVerifiesCatalogPromotion(): void
     {
-        /** @var CatalogPromotionInterface|MockObject $catalogPromotionMock */
+        /** @var CatalogPromotionInterface&MockObject $catalogPromotionMock */
         $catalogPromotionMock = $this->createMock(CatalogPromotionInterface::class);
         $tomorrow = new DateTimeImmutable('+1day');
         $yesterday = new DateTimeImmutable('-1day');

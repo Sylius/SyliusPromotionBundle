@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Sylius\Bundle\PromotionBundle\Validator\CatalogPromotionActionGroupValidator;
+use PHPUnit\Framework\TestCase;
 use stdClass;
+use Sylius\Bundle\PromotionBundle\Validator\CatalogPromotionActionGroupValidator;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\CatalogPromotionActionGroup;
 use Sylius\Component\Promotion\Model\CatalogPromotionActionInterface;
 use Symfony\Component\Validator\Constraint;
@@ -28,17 +28,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class CatalogPromotionActionGroupValidatorTest extends TestCase
 {
-    /**
-     * @var ExecutionContextInterface|MockObject
-     */
+    /** @var ExecutionContextInterface&MockObject */
     private MockObject $contextMock;
+
     private CatalogPromotionActionGroupValidator $catalogPromotionActionGroupValidator;
+
     private const VALIDATION_GROUPS = [
         'test' => [
-            'test_group',
+            'group1' => 'test_group',
         ],
         'another_test' => [
-            'another_test_group',
+            'group1' => 'another_test_group',
         ],
     ];
 
@@ -46,14 +46,14 @@ final class CatalogPromotionActionGroupValidatorTest extends TestCase
     {
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
         $this->catalogPromotionActionGroupValidator = new CatalogPromotionActionGroupValidator(self::VALIDATION_GROUPS);
-        $this->initialize($this->contextMock);
+        $this->catalogPromotionActionGroupValidator->initialize($this->contextMock);
     }
 
     public function testThrowsExceptionWhenConstraintIsNotCatalogPromotionActionGroup(): void
     {
-        /** @var CatalogPromotionActionInterface|MockObject $actionMock */
+        /** @var CatalogPromotionActionInterface&MockObject $actionMock */
         $actionMock = $this->createMock(CatalogPromotionActionInterface::class);
-        /** @var Constraint|MockObject $constraintMock */
+        /** @var Constraint&MockObject $constraintMock */
         $constraintMock = $this->createMock(Constraint::class);
         $this->expectException(UnexpectedTypeException::class);
         $this->catalogPromotionActionGroupValidator->validate($actionMock, $constraintMock);
@@ -67,7 +67,7 @@ final class CatalogPromotionActionGroupValidatorTest extends TestCase
 
     public function testDoesNothingWhenTypeIsNull(): void
     {
-        /** @var CatalogPromotionActionInterface|MockObject $actionMock */
+        /** @var CatalogPromotionActionInterface&MockObject $actionMock */
         $actionMock = $this->createMock(CatalogPromotionActionInterface::class);
         $actionMock->expects($this->once())->method('getType')->willReturn(null);
         $this->contextMock->expects($this->never())->method('getValidator');
@@ -76,7 +76,7 @@ final class CatalogPromotionActionGroupValidatorTest extends TestCase
 
     public function testDoesNothingWhenTypeIsAnEmptyString(): void
     {
-        /** @var CatalogPromotionActionInterface|MockObject $actionMock */
+        /** @var CatalogPromotionActionInterface&MockObject $actionMock */
         $actionMock = $this->createMock(CatalogPromotionActionInterface::class);
         $actionMock->expects($this->once())->method('getType')->willReturn('');
         $this->contextMock->expects($this->never())->method('getValidator');
@@ -85,13 +85,13 @@ final class CatalogPromotionActionGroupValidatorTest extends TestCase
 
     public function testPassesConfiguredValidationGroupsForFurtherValidation(): void
     {
-        /** @var ValidatorInterface|MockObject $validatorMock */
+        /** @var ValidatorInterface&MockObject $validatorMock */
         $validatorMock = $this->createMock(ValidatorInterface::class);
-        /** @var ContextualValidatorInterface|MockObject $contextualValidatorMock */
+        /** @var ContextualValidatorInterface&MockObject $contextualValidatorMock */
         $contextualValidatorMock = $this->createMock(ContextualValidatorInterface::class);
-        /** @var ConstraintViolationListInterface|MockObject $violationListMock */
+        /** @var ConstraintViolationListInterface&MockObject $violationListMock */
         $violationListMock = $this->createMock(ConstraintViolationListInterface::class);
-        /** @var CatalogPromotionActionInterface|MockObject $actionMock */
+        /** @var CatalogPromotionActionInterface&MockObject $actionMock */
         $actionMock = $this->createMock(CatalogPromotionActionInterface::class);
         $constraint = new CatalogPromotionActionGroup();
         $actionMock->expects($this->once())->method('getType')->willReturn('test');

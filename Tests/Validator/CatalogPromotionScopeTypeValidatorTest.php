@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Sylius\Bundle\PromotionBundle\Validator\CatalogPromotionScopeTypeValidator;
+use PHPUnit\Framework\TestCase;
 use stdClass;
+use Sylius\Bundle\PromotionBundle\Validator\CatalogPromotionScopeTypeValidator;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\CatalogPromotionScopeType;
 use Sylius\Component\Promotion\Model\CatalogPromotionScopeInterface;
 use Symfony\Component\Validator\Constraint;
@@ -26,11 +26,11 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 final class CatalogPromotionScopeTypeValidatorTest extends TestCase
 {
-    /**
-     * @var ExecutionContextInterface|MockObject
-     */
+    /** @var ExecutionContextInterface&MockObject */
     private MockObject $contextMock;
+
     private CatalogPromotionScopeTypeValidator $catalogPromotionScopeTypeValidator;
+
     private const SCOPE_TYPES = [
         'test',
         'another_test',
@@ -40,14 +40,14 @@ final class CatalogPromotionScopeTypeValidatorTest extends TestCase
     {
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
         $this->catalogPromotionScopeTypeValidator = new CatalogPromotionScopeTypeValidator(self::SCOPE_TYPES);
-        $this->initialize($this->contextMock);
+        $this->catalogPromotionScopeTypeValidator->initialize($this->contextMock);
     }
 
     public function testThrowsExceptionWhenConstraintIsNotCatalogPromotionScopeType(): void
     {
-        /** @var Constraint|MockObject $constraintMock */
+        /** @var Constraint&MockObject $constraintMock */
         $constraintMock = $this->createMock(Constraint::class);
-        /** @var CatalogPromotionScopeInterface|MockObject $scopeMock */
+        /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
         $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
         $this->expectException(UnexpectedTypeException::class);
         $this->catalogPromotionScopeTypeValidator->validate($scopeMock, $constraintMock);
@@ -61,7 +61,7 @@ final class CatalogPromotionScopeTypeValidatorTest extends TestCase
 
     public function testDoesNothingWhenPassedScopeHasNullAsType(): void
     {
-        /** @var CatalogPromotionScopeInterface|MockObject $scopeMock */
+        /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
         $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
         $scopeMock->expects($this->once())->method('getType')->willReturn(null);
         $this->contextMock->expects($this->never())->method('buildViolation');
@@ -70,7 +70,7 @@ final class CatalogPromotionScopeTypeValidatorTest extends TestCase
 
     public function testDoesNothingWhenPassedScopeHasAnEmptyStringAsType(): void
     {
-        /** @var CatalogPromotionScopeInterface|MockObject $scopeMock */
+        /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
         $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
         $scopeMock->expects($this->once())->method('getType')->willReturn('');
         $this->contextMock->expects($this->never())->method('buildViolation');
@@ -79,7 +79,7 @@ final class CatalogPromotionScopeTypeValidatorTest extends TestCase
 
     public function testDoesNothingWhenCatalogPromotionScopeHasValidType(): void
     {
-        /** @var CatalogPromotionScopeInterface|MockObject $scopeMock */
+        /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
         $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
         $scopeMock->expects($this->once())->method('getType')->willReturn('test');
         $this->contextMock->expects($this->never())->method('buildViolation');
@@ -88,9 +88,9 @@ final class CatalogPromotionScopeTypeValidatorTest extends TestCase
 
     public function testAddsViolationWhenTypeIsUnknown(): void
     {
-        /** @var ConstraintViolationBuilderInterface|MockObject $violationBuilderMock */
+        /** @var ConstraintViolationBuilderInterface&MockObject $violationBuilderMock */
         $violationBuilderMock = $this->createMock(ConstraintViolationBuilderInterface::class);
-        /** @var CatalogPromotionScopeInterface|MockObject $scopeMock */
+        /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
         $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
         $constraint = new CatalogPromotionScopeType();
         $scopeMock->expects($this->once())->method('getType')->willReturn('not_existing_type');

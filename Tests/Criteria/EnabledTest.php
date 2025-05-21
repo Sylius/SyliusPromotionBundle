@@ -13,20 +13,22 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Criteria;
 
-use PHPUnit\Framework\TestCase;
-use Sylius\Bundle\PromotionBundle\Criteria\Enabled;
-use PHPUnit\Framework\MockObject\MockObject;
 use Doctrine\ORM\QueryBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\PromotionBundle\Criteria\CriteriaInterface;
+use Sylius\Bundle\PromotionBundle\Criteria\Enabled;
 use Sylius\Component\Promotion\Model\CatalogPromotionInterface;
 
 final class EnabledTest extends TestCase
 {
     private Enabled $enabled;
+
     protected function setUp(): void
     {
         $this->enabled = new Enabled();
     }
+
     public function testImplementsCriteriaInterface(): void
     {
         $this->assertInstanceOf(CriteriaInterface::class, $this->enabled);
@@ -34,7 +36,7 @@ final class EnabledTest extends TestCase
 
     public function testAddsFiltersToQueryBuilder(): void
     {
-        /** @var QueryBuilder|MockObject $queryBuilderMock */
+        /** @var QueryBuilder&MockObject $queryBuilderMock */
         $queryBuilderMock = $this->createMock(QueryBuilder::class);
         $queryBuilderMock->expects($this->once())->method('getRootAliases')->willReturn(['catalog_promotion']);
         $queryBuilderMock->expects($this->once())->method('andWhere')->with('catalog_promotion.enabled = :enabled')->willReturn($queryBuilderMock);
@@ -44,7 +46,7 @@ final class EnabledTest extends TestCase
 
     public function testVerifiesCatalogPromotion(): void
     {
-        /** @var CatalogPromotionInterface|MockObject $catalogPromotionMock */
+        /** @var CatalogPromotionInterface&MockObject $catalogPromotionMock */
         $catalogPromotionMock = $this->createMock(CatalogPromotionInterface::class);
         $catalogPromotionMock->expects($this->once())->method('isEnabled')->willReturn(true, false);
         $this->assertTrue($this->enabled->verify($catalogPromotionMock));

@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Sylius\Bundle\PromotionBundle\Validator\PromotionNotCouponBasedValidator;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\PromotionNotCouponBased;
+use Sylius\Bundle\PromotionBundle\Validator\PromotionNotCouponBasedValidator;
 use Sylius\Component\Promotion\Model\PromotionCouponInterface;
 use Sylius\Component\Promotion\Model\PromotionInterface;
 use Symfony\Component\Validator\Constraint;
@@ -28,16 +28,16 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 final class PromotionNotCouponBasedValidatorTest extends TestCase
 {
-    /**
-     * @var ExecutionContextInterface|MockObject
-     */
+    /** @var ExecutionContextInterface&MockObject */
     private MockObject $contextMock;
+
     private PromotionNotCouponBasedValidator $promotionNotCouponBasedValidator;
+
     protected function setUp(): void
     {
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
-        $this->promotionNotCouponBasedValidator = new PromotionNotCouponBasedValidator($this->contextMock);
-        $this->initialize($this->contextMock);
+        $this->promotionNotCouponBasedValidator = new PromotionNotCouponBasedValidator();
+        $this->promotionNotCouponBasedValidator->initialize($this->contextMock);
     }
 
     public function testDoesNothingWhenValueIsNull(): void
@@ -48,9 +48,9 @@ final class PromotionNotCouponBasedValidatorTest extends TestCase
 
     public function testThrowsAnExceptionWhenConstraintIsNotPromotionNotCouponBased(): void
     {
-        /** @var PromotionCouponInterface|MockObject $couponMock */
+        /** @var PromotionCouponInterface&MockObject $couponMock */
         $couponMock = $this->createMock(PromotionCouponInterface::class);
-        /** @var Constraint|MockObject $constraintMock */
+        /** @var Constraint&MockObject $constraintMock */
         $constraintMock = $this->createMock(Constraint::class);
         $this->contextMock->expects($this->never())->method('buildViolation');
         $this->expectException(UnexpectedTypeException::class);
@@ -66,7 +66,7 @@ final class PromotionNotCouponBasedValidatorTest extends TestCase
 
     public function testDoesNothingWhenCouponHasNoPromotion(): void
     {
-        /** @var PromotionCouponInterface|MockObject $couponMock */
+        /** @var PromotionCouponInterface&MockObject $couponMock */
         $couponMock = $this->createMock(PromotionCouponInterface::class);
         $this->contextMock->expects($this->never())->method('buildViolation');
         $couponMock->expects($this->once())->method('getPromotion')->willReturn(null);
@@ -75,9 +75,9 @@ final class PromotionNotCouponBasedValidatorTest extends TestCase
 
     public function testDoesNothingWhenCouponHasPromotionAndItsCouponBased(): void
     {
-        /** @var PromotionCouponInterface|MockObject $couponMock */
+        /** @var PromotionCouponInterface&MockObject $couponMock */
         $couponMock = $this->createMock(PromotionCouponInterface::class);
-        /** @var PromotionInterface|MockObject $promotionMock */
+        /** @var PromotionInterface&MockObject $promotionMock */
         $promotionMock = $this->createMock(PromotionInterface::class);
         $this->contextMock->expects($this->never())->method('buildViolation');
         $promotionMock->expects($this->once())->method('isCouponBased')->willReturn(true);
@@ -87,11 +87,11 @@ final class PromotionNotCouponBasedValidatorTest extends TestCase
 
     public function testAddsViolationWhenCouponHasPromotionButItsNotCouponBased(): void
     {
-        /** @var ConstraintViolationBuilderInterface|MockObject $violationBuilderMock */
+        /** @var ConstraintViolationBuilderInterface&MockObject $violationBuilderMock */
         $violationBuilderMock = $this->createMock(ConstraintViolationBuilderInterface::class);
-        /** @var PromotionCouponInterface|MockObject $couponMock */
+        /** @var PromotionCouponInterface&MockObject $couponMock */
         $couponMock = $this->createMock(PromotionCouponInterface::class);
-        /** @var PromotionInterface|MockObject $promotionMock */
+        /** @var PromotionInterface&MockObject $promotionMock */
         $promotionMock = $this->createMock(PromotionInterface::class);
         $constraint = new PromotionNotCouponBased();
         $this->contextMock->expects($this->once())->method('buildViolation')->with($constraint->message)->willReturn($violationBuilderMock);

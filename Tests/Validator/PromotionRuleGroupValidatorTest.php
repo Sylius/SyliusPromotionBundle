@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Sylius\Bundle\PromotionBundle\Validator\PromotionRuleGroupValidator;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\PromotionRuleGroup;
+use Sylius\Bundle\PromotionBundle\Validator\PromotionRuleGroupValidator;
 use Sylius\Component\Promotion\Model\PromotionRuleInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -28,23 +28,27 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PromotionRuleGroupValidatorTest extends TestCase
 {
-    /**
-     * @var ExecutionContextInterface|MockObject
-     */
+    /** @var ExecutionContextInterface&MockObject */
     private MockObject $contextMock;
+
     private PromotionRuleGroupValidator $promotionRuleGroupValidator;
+
     protected function setUp(): void
     {
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
-        $this->promotionRuleGroupValidator = new PromotionRuleGroupValidator(['rule_two' => ['Default', 'rule_two']]);
-        $this->initialize($this->contextMock);
+
+        $this->promotionRuleGroupValidator = new PromotionRuleGroupValidator([
+            'rule_two' => ['Default' => 'Default', 'rule' => 'rule_two'],
+        ]);
+
+        $this->promotionRuleGroupValidator->initialize($this->contextMock);
     }
 
     public function testThrowsAnExceptionIfConstraintIsNotAnInstanceOfPromotionRuleGroup(): void
     {
-        /** @var Constraint|MockObject $constraintMock */
+        /** @var Constraint&MockObject $constraintMock */
         $constraintMock = $this->createMock(Constraint::class);
-        /** @var PromotionRuleInterface|MockObject $promotionRuleMock */
+        /** @var PromotionRuleInterface&MockObject $promotionRuleMock */
         $promotionRuleMock = $this->createMock(PromotionRuleInterface::class);
         $this->expectException(UnexpectedTypeException::class);
         $this->promotionRuleGroupValidator->validate($promotionRuleMock, $constraintMock);
@@ -58,11 +62,11 @@ final class PromotionRuleGroupValidatorTest extends TestCase
 
     public function testCallsAValidatorWithGroup(): void
     {
-        /** @var PromotionRuleInterface|MockObject $promotionRuleMock */
+        /** @var PromotionRuleInterface&MockObject $promotionRuleMock */
         $promotionRuleMock = $this->createMock(PromotionRuleInterface::class);
-        /** @var ValidatorInterface|MockObject $validatorMock */
+        /** @var ValidatorInterface&MockObject $validatorMock */
         $validatorMock = $this->createMock(ValidatorInterface::class);
-        /** @var ContextualValidatorInterface|MockObject $contextualValidatorMock */
+        /** @var ContextualValidatorInterface&MockObject $contextualValidatorMock */
         $contextualValidatorMock = $this->createMock(ContextualValidatorInterface::class);
         $promotionRuleMock->expects($this->once())->method('getType')->willReturn('rule_two');
         $this->contextMock->expects($this->once())->method('getValidator')->willReturn($validatorMock);
@@ -73,11 +77,11 @@ final class PromotionRuleGroupValidatorTest extends TestCase
 
     public function testCallsValidatorWithDefaultGroupsIfNoneProvidedForPromotionActionType(): void
     {
-        /** @var PromotionRuleInterface|MockObject $promotionRuleMock */
+        /** @var PromotionRuleInterface&MockObject $promotionRuleMock */
         $promotionRuleMock = $this->createMock(PromotionRuleInterface::class);
-        /** @var ValidatorInterface|MockObject $validatorMock */
+        /** @var ValidatorInterface&MockObject $validatorMock */
         $validatorMock = $this->createMock(ValidatorInterface::class);
-        /** @var ContextualValidatorInterface|MockObject $contextualValidatorMock */
+        /** @var ContextualValidatorInterface&MockObject $contextualValidatorMock */
         $contextualValidatorMock = $this->createMock(ContextualValidatorInterface::class);
         $promotionRuleMock->expects($this->once())->method('getType')->willReturn('rule_one');
         $this->contextMock->expects($this->once())->method('getValidator')->willReturn($validatorMock);

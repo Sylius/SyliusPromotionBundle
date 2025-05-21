@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Sylius\Bundle\PromotionBundle\Validator\PromotionRuleTypeValidator;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\PromotionRuleType;
+use Sylius\Bundle\PromotionBundle\Validator\PromotionRuleTypeValidator;
 use Sylius\Component\Promotion\Model\PromotionRuleInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -27,23 +27,23 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 final class PromotionRuleTypeValidatorTest extends TestCase
 {
-    /**
-     * @var ExecutionContextInterface|MockObject
-     */
+    /** @var ExecutionContextInterface&MockObject */
     private MockObject $contextMock;
+
     private PromotionRuleTypeValidator $promotionRuleTypeValidator;
+
     protected function setUp(): void
     {
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
         $this->promotionRuleTypeValidator = new PromotionRuleTypeValidator(['rule_one' => 'rule_one', 'rule_two' => 'rule_two']);
-        $this->initialize($this->contextMock);
+        $this->promotionRuleTypeValidator->initialize($this->contextMock);
     }
 
     public function testThrowsAnExceptionIfConstraintIsNotAnInstanceOfPromotionRuleType(): void
     {
-        /** @var Constraint|MockObject $constraintMock */
+        /** @var Constraint&MockObject $constraintMock */
         $constraintMock = $this->createMock(Constraint::class);
-        /** @var PromotionRuleInterface|MockObject $promotionRuleMock */
+        /** @var PromotionRuleInterface&MockObject $promotionRuleMock */
         $promotionRuleMock = $this->createMock(PromotionRuleInterface::class);
         $this->expectException(UnexpectedTypeException::class);
         $this->promotionRuleTypeValidator->validate($promotionRuleMock, $constraintMock);
@@ -57,9 +57,9 @@ final class PromotionRuleTypeValidatorTest extends TestCase
 
     public function testAddsViolationIfPromotionRuleHasInvalidType(): void
     {
-        /** @var ConstraintViolationBuilderInterface|MockObject $constraintViolationBuilderMock */
+        /** @var ConstraintViolationBuilderInterface&MockObject $constraintViolationBuilderMock */
         $constraintViolationBuilderMock = $this->createMock(ConstraintViolationBuilderInterface::class);
-        /** @var PromotionRuleInterface|MockObject $promotionRuleMock */
+        /** @var PromotionRuleInterface&MockObject $promotionRuleMock */
         $promotionRuleMock = $this->createMock(PromotionRuleInterface::class);
         $promotionRuleMock->expects($this->once())->method('getType')->willReturn('wrong_type');
         $this->contextMock->expects($this->once())->method('buildViolation')->with('sylius.promotion_rule.invalid_type')->willReturn($constraintViolationBuilderMock);

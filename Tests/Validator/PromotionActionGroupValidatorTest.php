@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Sylius\Bundle\PromotionBundle\Validator\PromotionActionGroupValidator;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\PromotionActionGroup;
+use Sylius\Bundle\PromotionBundle\Validator\PromotionActionGroupValidator;
 use Sylius\Component\Promotion\Model\PromotionActionInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -28,23 +28,27 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PromotionActionGroupValidatorTest extends TestCase
 {
-    /**
-     * @var ExecutionContextInterface|MockObject
-     */
+    /** @var ExecutionContextInterface&MockObject */
     private MockObject $contextMock;
+
     private PromotionActionGroupValidator $promotionActionGroupValidator;
+
     protected function setUp(): void
     {
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
-        $this->promotionActionGroupValidator = new PromotionActionGroupValidator(['action_two' => ['Default', 'action_two']]);
-        $this->initialize($this->contextMock);
+
+        $this->promotionActionGroupValidator = new PromotionActionGroupValidator([
+            'action_two' => ['Default' => 'Default', 'type' => 'action_two'],
+        ]);
+
+        $this->promotionActionGroupValidator->initialize($this->contextMock);
     }
 
     public function testThrowsAnExceptionIfConstraintIsNotAnInstanceOfPromotionActionGroup(): void
     {
-        /** @var Constraint|MockObject $constraintMock */
+        /** @var Constraint&MockObject $constraintMock */
         $constraintMock = $this->createMock(Constraint::class);
-        /** @var PromotionActionInterface|MockObject $promotionActionMock */
+        /** @var PromotionActionInterface&MockObject $promotionActionMock */
         $promotionActionMock = $this->createMock(PromotionActionInterface::class);
         $this->expectException(UnexpectedTypeException::class);
         $this->promotionActionGroupValidator->validate($promotionActionMock, $constraintMock);
@@ -58,11 +62,11 @@ final class PromotionActionGroupValidatorTest extends TestCase
 
     public function testCallsAValidatorWithGroup(): void
     {
-        /** @var PromotionActionInterface|MockObject $promotionActionMock */
+        /** @var PromotionActionInterface&MockObject $promotionActionMock */
         $promotionActionMock = $this->createMock(PromotionActionInterface::class);
-        /** @var ValidatorInterface|MockObject $validatorMock */
+        /** @var ValidatorInterface&MockObject $validatorMock */
         $validatorMock = $this->createMock(ValidatorInterface::class);
-        /** @var ContextualValidatorInterface|MockObject $contextualValidatorMock */
+        /** @var ContextualValidatorInterface&MockObject $contextualValidatorMock */
         $contextualValidatorMock = $this->createMock(ContextualValidatorInterface::class);
         $promotionActionMock->expects($this->once())->method('getType')->willReturn('action_two');
         $this->contextMock->expects($this->once())->method('getValidator')->willReturn($validatorMock);
@@ -73,11 +77,11 @@ final class PromotionActionGroupValidatorTest extends TestCase
 
     public function testCallsValidatorWithDefaultGroupsIfNoneProvidedForPromotionActionType(): void
     {
-        /** @var PromotionActionInterface|MockObject $promotionActionMock */
+        /** @var PromotionActionInterface&MockObject $promotionActionMock */
         $promotionActionMock = $this->createMock(PromotionActionInterface::class);
-        /** @var ValidatorInterface|MockObject $validatorMock */
+        /** @var ValidatorInterface&MockObject $validatorMock */
         $validatorMock = $this->createMock(ValidatorInterface::class);
-        /** @var ContextualValidatorInterface|MockObject $contextualValidatorMock */
+        /** @var ContextualValidatorInterface&MockObject $contextualValidatorMock */
         $contextualValidatorMock = $this->createMock(ContextualValidatorInterface::class);
         $promotionActionMock->expects($this->once())->method('getType')->willReturn('action_one');
         $this->contextMock->expects($this->once())->method('getValidator')->willReturn($validatorMock);

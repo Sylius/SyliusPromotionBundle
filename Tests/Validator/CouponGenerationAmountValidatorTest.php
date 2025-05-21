@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\CouponPossibleGenerationAmount;
 use Sylius\Bundle\PromotionBundle\Validator\CouponGenerationAmountValidator;
 use Sylius\Component\Promotion\Generator\GenerationPolicyInterface;
@@ -23,26 +23,25 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 final class CouponGenerationAmountValidatorTest extends TestCase
 {
-    /**
-     * @var GenerationPolicyInterface|MockObject
-     */
+    /** @var GenerationPolicyInterface&MockObject */
     private MockObject $generationPolicyMock;
-    /**
-     * @var ExecutionContextInterface|MockObject
-     */
+
+    /** @var ExecutionContextInterface&MockObject */
     private MockObject $contextMock;
+
     private CouponGenerationAmountValidator $couponGenerationAmountValidator;
+
     protected function setUp(): void
     {
         $this->generationPolicyMock = $this->createMock(GenerationPolicyInterface::class);
         $this->contextMock = $this->createMock(ExecutionContextInterface::class);
         $this->couponGenerationAmountValidator = new CouponGenerationAmountValidator($this->generationPolicyMock);
-        $this->initialize($this->contextMock);
+        $this->couponGenerationAmountValidator->initialize($this->contextMock);
     }
 
     public function testAddsViolation(): void
     {
-        /** @var ReadablePromotionCouponGeneratorInstructionInterface|MockObject $instructionMock */
+        /** @var ReadablePromotionCouponGeneratorInstructionInterface&MockObject $instructionMock */
         $instructionMock = $this->createMock(ReadablePromotionCouponGeneratorInstructionInterface::class);
         $constraint = new CouponPossibleGenerationAmount();
         $instructionMock->expects($this->once())->method('getAmount')->willReturn(17);
@@ -55,7 +54,7 @@ final class CouponGenerationAmountValidatorTest extends TestCase
 
     public function testDoesNotAddViolation(): void
     {
-        /** @var ReadablePromotionCouponGeneratorInstructionInterface|MockObject $instructionMock */
+        /** @var ReadablePromotionCouponGeneratorInstructionInterface&MockObject $instructionMock */
         $instructionMock = $this->createMock(ReadablePromotionCouponGeneratorInstructionInterface::class);
         $constraint = new CouponPossibleGenerationAmount();
         $instructionMock->expects($this->once())->method('getAmount')->willReturn(5);
