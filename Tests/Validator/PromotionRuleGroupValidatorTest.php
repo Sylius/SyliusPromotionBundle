@@ -77,7 +77,7 @@ final class PromotionRuleGroupValidatorTest extends TestCase
         $contextualValidatorMock->expects($this->once())->method('validate')->with(
             $promotionRuleMock,
             null,
-            ['Default' => 'Default', 'rule' => 'rule_two']
+            ['Default' => 'Default', 'rule' => 'rule_two'],
         )->willReturn($contextualValidatorMock);
 
         $this->promotionRuleGroupValidator->validate($promotionRuleMock, new PromotionRuleGroup(['groups' => ['Default', 'test_group']]));

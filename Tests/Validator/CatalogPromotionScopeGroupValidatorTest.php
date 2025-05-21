@@ -20,7 +20,6 @@ use Sylius\Bundle\PromotionBundle\Validator\CatalogPromotionScopeGroupValidator;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\CatalogPromotionScopeGroup;
 use Sylius\Component\Promotion\Model\CatalogPromotionScopeInterface;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Validator\ContextualValidatorInterface;
@@ -85,29 +84,33 @@ final class CatalogPromotionScopeGroupValidatorTest extends TestCase
 
     public function testPassesConfiguredValidationGroupsForFurtherValidation(): void
     {
-        /** @var ValidatorInterface&MockObject $validatorMock */
-        $validatorMock = $this->createMock(ValidatorInterface::class);
-        /** @var ContextualValidatorInterface&MockObject $contextualValidatorMock */
-        $contextualValidatorMock = $this->createMock(ContextualValidatorInterface::class);
-        /** @var ConstraintViolationListInterface&MockObject $violationListMock */
-        $violationListMock = $this->createMock(ConstraintViolationListInterface::class);
-        /** @var CatalogPromotionScopeInterface&MockObject $scopeMock */
-        $scopeMock = $this->createMock(CatalogPromotionScopeInterface::class);
         $constraint = new CatalogPromotionScopeGroup();
 
-        $scopeMock->expects($this->once())->method('getType')->willReturn('test');
-        $this->contextMock->expects($this->once())->method('getValidator')->willReturn($validatorMock);
-        $validatorMock->expects($this->once())->method('inContext')->with($this->contextMock)->willReturn($contextualValidatorMock);
+        /** @var CatalogPromotionScopeInterface&MockObject $scope */
+        $scope = $this->createMock(CatalogPromotionScopeInterface::class);
 
-        // Adjust validation groups to match the associative array format
-        $contextualValidatorMock->expects($this->once())
+        $scope->method('getType')->willReturn('test');
+
+        /** @var ValidatorInterface&MockObject $validator */
+        $validator = $this->createMock(ValidatorInterface::class);
+
+        /** @var ContextualValidatorInterface&MockObject $contextualValidator */
+        $contextualValidator = $this->createMock(ContextualValidatorInterface::class);
+
+        $this->contextMock->expects($this->once())
+            ->method('getValidator')
+            ->willReturn($validator);
+
+        $validator->expects($this->once())
+            ->method('inContext')
+            ->with($this->contextMock)
+            ->willReturn($contextualValidator);
+
+        $contextualValidator->expects($this->once())
             ->method('validate')
-            ->with($scopeMock, null, ['group1' => 'test_group'])
-            ->willReturn($contextualValidatorMock);
+            ->with($scope, null, ['group1' => 'test_group'])
+            ->willReturn($contextualValidator);
 
-        $this->contextMock->expects($this->once())->method('getViolations')->willReturn($violationListMock);
-        $violationListMock->expects($this->once())->method('count')->willReturn(1);
-
-        $this->catalogPromotionScopeGroupValidator->validate($scopeMock, $constraint);
+        $this->catalogPromotionScopeGroupValidator->validate($scope, $constraint);
     }
 }

@@ -78,7 +78,7 @@ final class PromotionActionGroupValidatorTest extends TestCase
         $contextualValidatorMock->expects($this->once())->method('validate')->with(
             $promotionActionMock,
             null,
-            ['Default' => 'Default', 'type' => 'action_two']
+            ['Default' => 'Default', 'type' => 'action_two'],
         )->willReturn($contextualValidatorMock);
 
         $constraint = new PromotionActionGroup(['groups' => ['Default', 'test_group']]);

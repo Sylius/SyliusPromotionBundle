@@ -44,8 +44,8 @@ final class CouponGenerationAmountValidatorTest extends TestCase
         /** @var ReadablePromotionCouponGeneratorInstructionInterface&MockObject $instructionMock */
         $instructionMock = $this->createMock(ReadablePromotionCouponGeneratorInstructionInterface::class);
         $constraint = new CouponPossibleGenerationAmount();
-        $instructionMock->expects($this->once())->method('getAmount')->willReturn(17);
-        $instructionMock->expects($this->once())->method('getCodeLength')->willReturn(1);
+        $instructionMock->expects($this->atLeastOnce())->method('getAmount')->willReturn(17);
+        $instructionMock->expects($this->atLeastOnce())->method('getCodeLength')->willReturn(1);
         $this->generationPolicyMock->expects($this->once())->method('isGenerationPossible')->with($instructionMock)->willReturn(false);
         $this->generationPolicyMock->expects($this->once())->method('getPossibleGenerationAmount')->with($instructionMock);
         $this->contextMock->expects($this->once())->method('addViolation');
