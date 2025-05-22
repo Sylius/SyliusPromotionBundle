@@ -15,7 +15,6 @@ namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\PromotionRuleType;
 use Sylius\Bundle\PromotionBundle\Validator\PromotionRuleTypeValidator;
 use Sylius\Component\Promotion\Model\PromotionRuleInterface;
@@ -28,44 +27,61 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 final class PromotionRuleTypeValidatorTest extends TestCase
 {
     /** @var ExecutionContextInterface&MockObject */
-    private MockObject $contextMock;
+    private MockObject $context;
 
     private PromotionRuleTypeValidator $promotionRuleTypeValidator;
 
+    /** @var PromotionRuleInterface&MockObject */
+    private PromotionRuleInterface $promotionRule;
+
     protected function setUp(): void
     {
-        $this->contextMock = $this->createMock(ExecutionContextInterface::class);
+        $this->context = $this->createMock(ExecutionContextInterface::class);
         $this->promotionRuleTypeValidator = new PromotionRuleTypeValidator(['rule_one' => 'rule_one', 'rule_two' => 'rule_two']);
-        $this->promotionRuleTypeValidator->initialize($this->contextMock);
+        $this->promotionRuleTypeValidator->initialize($this->context);
+        $this->promotionRule = $this->createMock(PromotionRuleInterface::class);
     }
 
     public function testThrowsAnExceptionIfConstraintIsNotAnInstanceOfPromotionRuleType(): void
     {
-        /** @var Constraint&MockObject $constraintMock */
-        $constraintMock = $this->createMock(Constraint::class);
-        /** @var PromotionRuleInterface&MockObject $promotionRuleMock */
-        $promotionRuleMock = $this->createMock(PromotionRuleInterface::class);
-        $this->expectException(UnexpectedTypeException::class);
-        $this->promotionRuleTypeValidator->validate($promotionRuleMock, $constraintMock);
+        /** @var Constraint&MockObject $constraint */
+        $constraint = $this->createMock(Constraint::class);
+
+        self::expectException(UnexpectedTypeException::class);
+
+        $this->promotionRuleTypeValidator->validate($this->promotionRule, $constraint);
     }
 
     public function testThrowsAnExceptionIfValueIsNotAnInstanceOfArray(): void
     {
-        $this->expectException(UnexpectedValueException::class);
-        $this->promotionRuleTypeValidator->validate(new stdClass(), new PromotionRuleType());
+        self::expectException(UnexpectedValueException::class);
+
+        $this->promotionRuleTypeValidator->validate(new \stdClass(), new PromotionRuleType());
     }
 
     public function testAddsViolationIfPromotionRuleHasInvalidType(): void
     {
-        /** @var ConstraintViolationBuilderInterface&MockObject $constraintViolationBuilderMock */
-        $constraintViolationBuilderMock = $this->createMock(ConstraintViolationBuilderInterface::class);
-        /** @var PromotionRuleInterface&MockObject $promotionRuleMock */
-        $promotionRuleMock = $this->createMock(PromotionRuleInterface::class);
-        $promotionRuleMock->expects($this->once())->method('getType')->willReturn('wrong_type');
-        $this->contextMock->expects($this->once())->method('buildViolation')->with('sylius.promotion_rule.invalid_type')->willReturn($constraintViolationBuilderMock);
-        $constraintViolationBuilderMock->expects($this->once())->method('setParameter')->with('{{ available_rule_types }}', 'rule_one, rule_two')->willReturn($constraintViolationBuilderMock);
-        $constraintViolationBuilderMock->expects($this->once())->method('atPath')->with('type')->willReturn($constraintViolationBuilderMock);
-        $constraintViolationBuilderMock->expects($this->once())->method('addViolation');
-        $this->promotionRuleTypeValidator->validate($promotionRuleMock, new PromotionRuleType());
+        /** @var ConstraintViolationBuilderInterface&MockObject $constraintViolationBuilder */
+        $constraintViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
+
+        $this->promotionRule->expects(self::once())->method('getType')->willReturn('wrong_type');
+
+        $this->context->expects(self::once())
+            ->method('buildViolation')
+            ->with('sylius.promotion_rule.invalid_type')
+            ->willReturn($constraintViolationBuilder);
+
+        $constraintViolationBuilder->expects(self::once())
+            ->method('setParameter')
+            ->with('{{ available_rule_types }}', 'rule_one, rule_two')
+            ->willReturn($constraintViolationBuilder);
+
+        $constraintViolationBuilder->expects(self::once())
+            ->method('atPath')->with('type')
+            ->willReturn($constraintViolationBuilder);
+
+        $constraintViolationBuilder->expects(self::once())->method('addViolation');
+
+        $this->promotionRuleTypeValidator->validate($this->promotionRule, new PromotionRuleType());
     }
 }

@@ -15,7 +15,6 @@ namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Sylius\Bundle\PromotionBundle\Validator\CatalogPromotionActionTypeValidator;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\CatalogPromotionActionType;
 use Sylius\Component\Promotion\Model\CatalogPromotionActionInterface;
@@ -62,7 +61,7 @@ final class CatalogPromotionActionTypeValidatorTest extends TestCase
     {
         self::expectException(UnexpectedTypeException::class);
 
-        $this->catalogPromotionActionTypeValidator->validate(new stdClass(), new CatalogPromotionActionType());
+        $this->catalogPromotionActionTypeValidator->validate(new \stdClass(), new CatalogPromotionActionType());
     }
 
     public function testDoesNothingWhenPassedActionHasNullAsType(): void

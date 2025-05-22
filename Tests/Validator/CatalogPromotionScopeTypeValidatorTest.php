@@ -15,7 +15,6 @@ namespace Tests\Sylius\Bundle\PromotionBundle\Validator;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 use Sylius\Bundle\PromotionBundle\Validator\CatalogPromotionScopeTypeValidator;
 use Sylius\Bundle\PromotionBundle\Validator\Constraints\CatalogPromotionScopeType;
 use Sylius\Component\Promotion\Model\CatalogPromotionScopeInterface;
@@ -62,7 +61,7 @@ final class CatalogPromotionScopeTypeValidatorTest extends TestCase
     {
         self::expectException(UnexpectedTypeException::class);
 
-        $this->catalogPromotionScopeTypeValidator->validate(new stdClass(), new CatalogPromotionScopeType());
+        $this->catalogPromotionScopeTypeValidator->validate(new \stdClass(), new CatalogPromotionScopeType());
     }
 
     public function testDoesNothingWhenPassedScopeHasNullAsType(): void
