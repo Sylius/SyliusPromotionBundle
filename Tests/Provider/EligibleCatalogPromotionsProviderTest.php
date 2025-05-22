@@ -84,8 +84,7 @@ final class EligibleCatalogPromotionsProviderTest extends TestCase
                 $catalogPromotion,
                 $secondCatalogPromotion,
             ],
-            $this->eligibleCatalogPromotionsProvider
-            ->provide(),
+            $this->eligibleCatalogPromotionsProvider->provide(),
         );
     }
 }

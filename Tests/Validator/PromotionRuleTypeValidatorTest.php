@@ -52,7 +52,7 @@ final class PromotionRuleTypeValidatorTest extends TestCase
         $this->promotionRuleTypeValidator->validate($this->promotionRule, $constraint);
     }
 
-    public function testThrowsAnExceptionIfValueIsNotAnInstanceOfArray(): void
+    public function testThrowsAnExceptionIfValueIsNotAnInstanceOfPromotionRuleInterface(): void
     {
         self::expectException(UnexpectedValueException::class);
 

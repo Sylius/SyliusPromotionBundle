@@ -60,7 +60,7 @@ final class PromotionRuleGroupValidatorTest extends TestCase
         $this->promotionRuleGroupValidator->validate($this->promotionRule, $constraint);
     }
 
-    public function testThrowsAnExceptionIfValueIsNotAnInstanceOfArray(): void
+    public function testThrowsAnExceptionIfValueIsNotAnInstanceOfPromotionRule(): void
     {
         self::expectException(UnexpectedValueException::class);
 
@@ -69,8 +69,8 @@ final class PromotionRuleGroupValidatorTest extends TestCase
 
     public function testCallsAValidatorWithGroup(): void
     {
-        /** @var ContextualValidatorInterface&MockObject $contextualValidatorMock */
-        $contextualValidatorMock = $this->createMock(ContextualValidatorInterface::class);
+        /** @var ContextualValidatorInterface&MockObject $contextualValidator */
+        $contextualValidator = $this->createMock(ContextualValidatorInterface::class);
 
         $this->promotionRule->expects(self::once())->method('getType')->willReturn('rule_two');
 
@@ -79,9 +79,9 @@ final class PromotionRuleGroupValidatorTest extends TestCase
         $this->validator->expects(self::once())
             ->method('inContext')
             ->with($this->context)
-            ->willReturn($contextualValidatorMock);
+            ->willReturn($contextualValidator);
 
-        $contextualValidatorMock->expects(self::once())
+        $contextualValidator->expects(self::once())
             ->method('validate')
             ->with(
                 $this->promotionRule,
@@ -91,7 +91,7 @@ final class PromotionRuleGroupValidatorTest extends TestCase
                     'rule' => 'rule_two',
                 ],
             )
-            ->willReturn($contextualValidatorMock);
+            ->willReturn($contextualValidator);
 
         $this->promotionRuleGroupValidator->validate(
             $this->promotionRule,
