@@ -27,100 +27,77 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PromotionRuleGroupValidatorTest extends TestCase
 {
-    /** @var ExecutionContextInterface&MockObject */
-    private MockObject $context;
-
     private PromotionRuleGroupValidator $promotionRuleGroupValidator;
 
-    /** @var PromotionRuleInterface&MockObject */
-    private PromotionRuleInterface $promotionRule;
+    private ExecutionContextInterface&MockObject $context;
 
-    /** @var ValidatorInterface&MockObject */
-    private ValidatorInterface $validator;
+    private MockObject&ValidatorInterface $validator;
+
+    private ContextualValidatorInterface&MockObject $contextualValidator;
+
+    private MockObject&PromotionRuleInterface $promotionRule;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->context = $this->createMock(ExecutionContextInterface::class);
-        $this->promotionRuleGroupValidator = new PromotionRuleGroupValidator([
-            'rule_two' => ['Default' => 'Default', 'rule' => 'rule_two'],
-        ]);
+        $this->promotionRuleGroupValidator = new PromotionRuleGroupValidator(['rule_two' => ['Default', 'rule_two']]);
         $this->promotionRuleGroupValidator->initialize($this->context);
-        $this->promotionRule = $this->createMock(PromotionRuleInterface::class);
         $this->validator = $this->createMock(ValidatorInterface::class);
+        $this->contextualValidator = $this->createMock(ContextualValidatorInterface::class);
+        $this->promotionRule = $this->createMock(PromotionRuleInterface::class);
     }
 
-    public function testThrowsAnExceptionIfConstraintIsNotAnInstanceOfPromotionRuleGroup(): void
+    public function testThrowsExceptionIfConstraintIsNotPromotionRuleGroup(): void
     {
-        /** @var Constraint&MockObject $constraint */
+        $this->expectException(UnexpectedTypeException::class);
+
+        $promotionRule = $this->createMock(PromotionRuleInterface::class);
         $constraint = $this->createMock(Constraint::class);
 
-        self::expectException(UnexpectedTypeException::class);
+        $this->promotionRuleGroupValidator->validate($promotionRule, $constraint);
+    }
 
+    public function testThrowsExceptionIfValueIsNotPromotionRule(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+
+        $constraint = new PromotionRuleGroup();
+
+        $this->promotionRuleGroupValidator->validate(new \stdClass(), $constraint);
+    }
+
+    public function testCallsValidatorWithGroup(): void
+    {
+        $this->promotionRule->method('getType')->willReturn('rule_two');
+
+        $this->context->method('getValidator')->willReturn($this->validator);
+        $this->validator->method('inContext')->with($this->context)->willReturn($this->contextualValidator);
+
+        $this->contextualValidator
+            ->expects($this->once())
+            ->method('validate')
+            ->with($this->promotionRule, null, ['Default', 'rule_two'])
+            ->willReturn($this->contextualValidator);
+
+        $constraint = new PromotionRuleGroup(['groups' => ['Default', 'test_group']]);
         $this->promotionRuleGroupValidator->validate($this->promotionRule, $constraint);
     }
 
-    public function testThrowsAnExceptionIfValueIsNotAnInstanceOfPromotionRule(): void
+    public function testCallsValidatorWithDefaultGroupsIfNoneProvided(): void
     {
-        self::expectException(UnexpectedValueException::class);
+        $this->promotionRule->method('getType')->willReturn('rule_one');
 
-        $this->promotionRuleGroupValidator->validate(new \stdClass(), new PromotionRuleGroup());
-    }
+        $this->context->method('getValidator')->willReturn($this->validator);
+        $this->validator->method('inContext')->with($this->context)->willReturn($this->contextualValidator);
 
-    public function testCallsAValidatorWithGroup(): void
-    {
-        /** @var ContextualValidatorInterface&MockObject $contextualValidator */
-        $contextualValidator = $this->createMock(ContextualValidatorInterface::class);
-
-        $this->promotionRule->expects(self::once())->method('getType')->willReturn('rule_two');
-
-        $this->context->expects(self::once())->method('getValidator')->willReturn($this->validator);
-
-        $this->validator->expects(self::once())
-            ->method('inContext')
-            ->with($this->context)
-            ->willReturn($contextualValidator);
-
-        $contextualValidator->expects(self::once())
-            ->method('validate')
-            ->with(
-                $this->promotionRule,
-                null,
-                [
-                    'Default' => 'Default',
-                    'rule' => 'rule_two',
-                ],
-            )
-            ->willReturn($contextualValidator);
-
-        $this->promotionRuleGroupValidator->validate(
-            $this->promotionRule,
-            new PromotionRuleGroup(['groups' => ['Default', 'test_group']]),
-        );
-    }
-
-    public function testCallsValidatorWithDefaultGroupsIfNoneProvidedForPromotionActionType(): void
-    {
-        /** @var ContextualValidatorInterface&MockObject $contextualValidator */
-        $contextualValidator = $this->createMock(ContextualValidatorInterface::class);
-
-        $this->promotionRule->expects(self::once())->method('getType')->willReturn('rule_one');
-
-        $this->context->expects(self::once())->method('getValidator')->willReturn($this->validator);
-
-        $this->validator->expects(self::once())
-            ->method('inContext')
-            ->with($this->context)
-            ->willReturn($contextualValidator);
-
-        $contextualValidator->expects(self::once())
+        $this->contextualValidator
+            ->expects($this->once())
             ->method('validate')
             ->with($this->promotionRule, null, ['Default', 'test_group'])
-            ->willReturn($contextualValidator);
+            ->willReturn($this->contextualValidator);
 
-        $this->promotionRuleGroupValidator->validate(
-            $this->promotionRule,
-            new PromotionRuleGroup(['groups' => ['Default', 'test_group']]),
-        );
+        $constraint = new PromotionRuleGroup(['groups' => ['Default', 'test_group']]);
+        $this->promotionRuleGroupValidator->validate($this->promotionRule, $constraint);
     }
 }

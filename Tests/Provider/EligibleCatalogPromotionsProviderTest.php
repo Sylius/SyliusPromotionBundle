@@ -23,14 +23,11 @@ use Sylius\Component\Promotion\Repository\CatalogPromotionRepositoryInterface;
 
 final class EligibleCatalogPromotionsProviderTest extends TestCase
 {
-    /** @var CatalogPromotionRepositoryInterface&MockObject */
-    private CatalogPromotionRepositoryInterface $catalogPromotionRepository;
+    private CatalogPromotionRepositoryInterface&MockObject $catalogPromotionRepository;
 
-    /** @var CriteriaInterface&MockObject */
-    private CriteriaInterface $firstCriterion;
+    private CriteriaInterface&MockObject $firstCriterion;
 
-    /** @var CriteriaInterface&MockObject */
-    private CriteriaInterface $secondCriterion;
+    private CriteriaInterface&MockObject $secondCriterion;
 
     private EligibleCatalogPromotionsProvider $eligibleCatalogPromotionsProvider;
 
@@ -42,10 +39,7 @@ final class EligibleCatalogPromotionsProviderTest extends TestCase
         $this->secondCriterion = $this->createMock(CriteriaInterface::class);
         $this->eligibleCatalogPromotionsProvider = new EligibleCatalogPromotionsProvider(
             $this->catalogPromotionRepository,
-            [
-                $this->firstCriterion,
-                $this->secondCriterion,
-            ],
+            [$this->firstCriterion, $this->secondCriterion],
         );
     }
 
@@ -66,24 +60,11 @@ final class EligibleCatalogPromotionsProviderTest extends TestCase
 
         $this->catalogPromotionRepository->expects(self::once())
             ->method('findByCriteria')
-            ->with(
-                [
-                    $this->firstCriterion,
-                    $this->secondCriterion,
-                ],
-            )
-            ->willReturn(
-                [
-                    $catalogPromotion,
-                    $secondCatalogPromotion,
-                ],
-            );
+            ->with([$this->firstCriterion, $this->secondCriterion])
+            ->willReturn([$catalogPromotion, $secondCatalogPromotion]);
 
         self::assertSame(
-            [
-                $catalogPromotion,
-                $secondCatalogPromotion,
-            ],
+            [$catalogPromotion, $secondCatalogPromotion],
             $this->eligibleCatalogPromotionsProvider->provide(),
         );
     }

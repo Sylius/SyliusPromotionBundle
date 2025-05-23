@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Tests\Sylius\Bundle\PromotionBundle\Criteria;
 
-use DateTimeImmutable;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -24,16 +23,27 @@ use Symfony\Component\Clock\ClockInterface;
 
 final class DateRangeTest extends TestCase
 {
-    /** @var ClockInterface&MockObject */
-    private ClockInterface $clock;
+    private ClockInterface&MockObject $clock;
 
     private DateRange $dateRange;
+
+    private CatalogPromotionInterface&MockObject $catalogPromotion;
+
+    private \DateTimeImmutable $tomorrow;
+
+    private \DateTimeImmutable $yesterday;
+
+    private \DateTimeImmutable $now;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->clock = $this->createMock(ClockInterface::class);
         $this->dateRange = new DateRange($this->clock);
+        $this->catalogPromotion = $this->createMock(CatalogPromotionInterface::class);
+        $this->tomorrow = new \DateTimeImmutable('+1day');
+        $this->yesterday = new \DateTimeImmutable('-1day');
+        $this->now = new \DateTimeImmutable();
     }
 
     public function testImplementsCriteriaInterface(): void
@@ -48,9 +58,7 @@ final class DateRangeTest extends TestCase
 
         $queryBuilder->expects(self::once())->method('getRootAliases')->willReturn(['o']);
 
-        $now = new DateTimeImmutable();
-
-        $this->clock->expects(self::once())->method('now')->willReturn($now);
+        $this->setupClockExpectation();
 
         $queryBuilder->expects(self::exactly(2))
             ->method('andWhere')
@@ -69,29 +77,46 @@ final class DateRangeTest extends TestCase
 
         $queryBuilder->expects(self::once())
             ->method('setParameter')
-            ->with('date', $now)
+            ->with('date', $this->now)
             ->willReturn($queryBuilder);
 
         self::assertSame($queryBuilder, $this->dateRange->filterQueryBuilder($queryBuilder));
     }
 
-    public function testVerifiesCatalogPromotion(): void
+    public function testVerifiesCatalogPromotionWithValidDateRange(): void
     {
-        /** @var CatalogPromotionInterface&MockObject $catalogPromotion */
-        $catalogPromotion = $this->createMock(CatalogPromotionInterface::class);
+        $this->setupClockExpectation();
 
-        $tomorrow = new DateTimeImmutable('+1day');
-        $yesterday = new DateTimeImmutable('-1day');
-        $now = new DateTimeImmutable();
+        $this->catalogPromotion->method('getStartDate')->willReturn($this->yesterday);
+        $this->catalogPromotion->method('getEndDate')->willReturn($this->tomorrow);
 
-        $this->clock->expects(self::once())->method('now')->willReturn($now);
+        self::assertTrue($this->dateRange->verify($this->catalogPromotion));
+    }
 
-        $catalogPromotion->method('getStartDate')
-            ->willReturnOnConsecutiveCalls($yesterday, null, $tomorrow);
+    public function testVerifiesCatalogPromotionWithNullDates(): void
+    {
+        $this->setupClockExpectation();
 
-        $catalogPromotion->method('getEndDate')
-            ->willReturnOnConsecutiveCalls($tomorrow, null, $yesterday);
+        $this->catalogPromotion->method('getStartDate')->willReturn(null);
+        $this->catalogPromotion->method('getEndDate')->willReturn(null);
 
-        self::assertFalse($this->dateRange->verify($catalogPromotion));
+        self::assertTrue($this->dateRange->verify($this->catalogPromotion));
+    }
+
+    public function testVerifiesCatalogPromotionWithInvalidDateRange(): void
+    {
+        $this->setupClockExpectation();
+
+        $this->catalogPromotion->method('getStartDate')->willReturn($this->tomorrow);
+        $this->catalogPromotion->method('getEndDate')->willReturn($this->yesterday);
+
+        self::assertFalse($this->dateRange->verify($this->catalogPromotion));
+    }
+
+    private function setupClockExpectation(): void
+    {
+        $this->clock->expects(self::once())
+            ->method('now')
+            ->willReturn($this->now);
     }
 }
