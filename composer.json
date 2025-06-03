@@ -69,7 +69,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Sylius\\Bundle\\PromotionBundle\\": "Tests/",
+            "Tests\\Sylius\\Bundle\\PromotionBundle\\": "tests/",
             "App\\": "test/src/"
         },
         "classmap": [
