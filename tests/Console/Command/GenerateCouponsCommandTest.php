@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Sylius\Bundle\PromotionBundle\Tests\Console\Command;
+namespace Tests\Sylius\Bundle\PromotionBundle\Console\Command;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;

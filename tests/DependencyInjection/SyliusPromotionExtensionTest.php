@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Sylius\Bundle\PromotionBundle\Tests\DependencyInjection;
+namespace Tests\Sylius\Bundle\PromotionBundle\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -21,13 +21,13 @@ use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionCouponEligibilityChecker;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionEligibilityChecker;
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionRuleChecker;
 use Sylius\Bundle\PromotionBundle\DependencyInjection\SyliusPromotionExtension;
-use Sylius\Bundle\PromotionBundle\Tests\Stub\CatalogPromotionVariantCheckerStub;
-use Sylius\Bundle\PromotionBundle\Tests\Stub\PromotionActionStub;
-use Sylius\Bundle\PromotionBundle\Tests\Stub\PromotionCouponEligibilityCheckerStub;
-use Sylius\Bundle\PromotionBundle\Tests\Stub\PromotionEligibilityCheckerStub;
-use Sylius\Bundle\PromotionBundle\Tests\Stub\PromotionRuleCheckerStub;
 use Sylius\Component\Promotion\Model\PromotionSubjectInterface;
 use Symfony\Component\DependencyInjection\Definition;
+use Tests\Sylius\Bundle\PromotionBundle\Stub\CatalogPromotionVariantCheckerStub;
+use Tests\Sylius\Bundle\PromotionBundle\Stub\PromotionActionStub;
+use Tests\Sylius\Bundle\PromotionBundle\Stub\PromotionCouponEligibilityCheckerStub;
+use Tests\Sylius\Bundle\PromotionBundle\Stub\PromotionEligibilityCheckerStub;
+use Tests\Sylius\Bundle\PromotionBundle\Stub\PromotionRuleCheckerStub;
 
 final class SyliusPromotionExtensionTest extends AbstractExtensionTestCase
 {
