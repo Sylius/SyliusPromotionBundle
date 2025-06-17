@@ -22,9 +22,9 @@ sylius:
             invalid: 'Il tipo di azione della promozione del catalogo non è valido. I tipi disponibili sono {{ available_action_types }}.'
         invalid_type: 'Il tipo di azione della promozione del catalogo non è valido. Per favore scegli un tipo valido.'
         percentage_discount:
-            not_in_range: 'L\'importo dello sconto percentuale deve essere compreso tra 0% e 100%.'
-            not_number_or_empty: 'L\'importo dello sconto percentuale deve essere un numero e non può essere vuoto.'
-            not_valid: 'L\'importo dello sconto percentuale deve essere configurato.'
+            not_in_range: 'L''importo dello sconto percentuale deve essere compreso tra 0% e 100%.'
+            not_number_or_empty: 'L''importo dello sconto percentuale deve essere un numero e non può essere vuoto.'
+            not_valid: 'L''importo dello sconto percentuale deve essere configurato.'
     catalog_promotion_scope:
         type:
             not_blank: 'Per favore scegli un tipo di ambito.'
