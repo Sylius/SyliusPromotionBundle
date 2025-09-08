@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Sylius\Bundle\PromotionBundle\Tests\Stub;
+namespace Tests\Sylius\Bundle\PromotionBundle\Stub;
 
 use Sylius\Bundle\PromotionBundle\Attribute\AsPromotionAction;
 use Sylius\Component\Promotion\Action\PromotionActionCommandInterface;

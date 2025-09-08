@@ -32,7 +32,7 @@
         "sylius/money-bundle": "^2.0",
         "sylius/promotion": "^2.0",
         "sylius/registry": "^1.6",
-        "sylius/resource-bundle": "^1.12 || ^1.13@beta",
+        "sylius/resource-bundle": "^1.12",
         "symfony/clock": "^6.4 || ^7.2",
         "symfony/framework-bundle": "^6.4.1 || ^7.2"
     },
@@ -69,7 +69,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Sylius\\Bundle\\PromotionBundle\\": "Tests/",
+            "Tests\\Sylius\\Bundle\\PromotionBundle\\": "tests/",
             "App\\": "test/src/"
         },
         "classmap": [

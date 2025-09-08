@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Sylius\Bundle\PromotionBundle\Tests\Form;
+namespace Tests\Sylius\Bundle\PromotionBundle\Form;
 
 use PHPUnit\Framework\Attributes\Test;
 use Sylius\Bundle\PromotionBundle\Form\Type\CatalogPromotionActionType;
